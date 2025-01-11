@@ -1,0 +1,795 @@
+SQL> 
+SQL> DROP TABLE client CASCADE CONSTRAINTS;
+
+Table CLIENT dropped.
+
+SQL> 
+SQL> DROP TABLE combo_detail CASCADE CONSTRAINTS;
+
+Table COMBO_DETAIL dropped.
+
+SQL> 
+SQL> DROP TABLE employee CASCADE CONSTRAINTS;
+
+Table EMPLOYEE dropped.
+
+SQL> 
+SQL> DROP TABLE job CASCADE CONSTRAINTS;
+
+Table JOB dropped.
+
+SQL> 
+SQL> DROP TABLE purpose CASCADE CONSTRAINTS;
+
+Table PURPOSE dropped.
+
+SQL> 
+SQL> DROP TABLE quote CASCADE CONSTRAINTS;
+
+Table QUOTE dropped.
+
+SQL> 
+SQL> DROP TABLE trailer CASCADE CONSTRAINTS;
+
+Table TRAILER dropped.
+
+SQL> 
+SQL> DROP TABLE trailer_class CASCADE CONSTRAINTS;
+
+Table TRAILER_CLASS dropped.
+
+SQL> 
+SQL> DROP TABLE trailer_type CASCADE CONSTRAINTS;
+
+Table TRAILER_TYPE dropped.
+
+SQL> 
+SQL> DROP TABLE truck CASCADE CONSTRAINTS;
+
+Table TRUCK dropped.
+
+SQL> 
+SQL> DROP TABLE truck_class CASCADE CONSTRAINTS;
+
+Table TRUCK_CLASS dropped.
+
+SQL> 
+SQL> DROP TABLE truck_trailer_purpose CASCADE CONSTRAINTS;
+
+Table TRUCK_TRAILER_PURPOSE dropped.
+
+SQL> 
+SQL> DROP TABLE truck_type CASCADE CONSTRAINTS;
+
+Table TRUCK_TYPE dropped.
+
+SQL> 
+SQL> -- predefined type, no DDL - MDSYS.SDO_GEOMETRY
+SQL> 
+SQL> -- predefined type, no DDL - XMLTYPE
+SQL> 
+SQL> CREATE TABLE client (
+  2      cli_no       NUMBER(7) NOT NULL,
+  3      cli_fname    VARCHAR2(50) NOT NULL,
+  4      cli_lname    VARCHAR2(50) NOT NULL,
+  5      cli_bus_name VARCHAR2(100),
+  6      cli_address  VARCHAR2(150) NOT NULL,
+  7      cli_phone_no CHAR(10) NOT NULL
+  8  );
+
+Table CLIENT created.
+
+SQL> 
+SQL> COMMENT ON COLUMN client.cli_no IS
+  2      'The unique client number that identifies each client in the database';
+
+Comment created.
+
+SQL> 
+SQL> COMMENT ON COLUMN client.cli_fname IS
+  2      'The Client''s First Name';
+
+Comment created.
+
+SQL> 
+SQL> COMMENT ON COLUMN client.cli_lname IS
+  2      'The Client''s  Last Name';
+
+Comment created.
+
+SQL> 
+SQL> COMMENT ON COLUMN client.cli_bus_name IS
+  2      'The Client''s business name (if applicable). Optional in the case that the client is purchasing independently. ';
+
+Comment created.
+
+SQL> 
+SQL> COMMENT ON COLUMN client.cli_address IS
+  2      'The Client''s address ';
+
+Comment created.
+
+SQL> 
+SQL> COMMENT ON COLUMN client.cli_phone_no IS
+  2      'The Client''s phone number';
+
+Comment created.
+
+SQL> 
+SQL> ALTER TABLE client ADD CONSTRAINT client_pk PRIMARY KEY ( cli_no );
+
+Table CLIENT altered.
+
+SQL> 
+SQL> CREATE TABLE combo_detail (
+  2      truck_trailer_combo_code CHAR(3 CHAR) NOT NULL,
+  3      truck_vin                CHAR(16) NOT NULL,
+  4      trailer_code             CHAR(5) NOT NULL
+  5  );
+
+Table COMBO_DETAIL created.
+
+SQL> 
+SQL> COMMENT ON COLUMN combo_detail.truck_trailer_combo_code IS
+  2      'a 3 character code representing the combination of a truck and trailer';
+
+Comment created.
+
+SQL> 
+SQL> COMMENT ON COLUMN combo_detail.truck_vin IS
+  2      'vehicle identification number ';
+
+Comment created.
+
+SQL> 
+SQL> COMMENT ON COLUMN combo_detail.trailer_code IS
+  2      'a 5 character long code identifying a trailer';
+
+Comment created.
+
+SQL> 
+SQL> ALTER TABLE combo_detail ADD CONSTRAINT truck_and_trailer_pk PRIMARY KEY ( truck_trailer_combo_code );
+
+Table COMBO_DETAIL altered.
+
+SQL> 
+SQL> CREATE TABLE employee (
+  2      emp_no         NUMBER(7) NOT NULL,
+  3      emp_fname      VARCHAR2(50) NOT NULL,
+  4      emp_lname      VARCHAR2(50) NOT NULL,
+  5      emp_phone_no   CHAR(10) NOT NULL,
+  6      emp_tfn        NUMBER(9) NOT NULL,
+  7      emp_salary     NUMBER(9, 2) NOT NULL,
+  8      emp_role       VARCHAR2(10) NOT NULL,
+  9      emp_no_managed NUMBER(7)
+ 10  );
+
+Table EMPLOYEE created.
+
+SQL> 
+SQL> ALTER TABLE employee
+  2      ADD CONSTRAINT chk_emprole CHECK ( emp_role IN ( 'C', 'D', 'G', 'MA', 'ME' ) );
+
+Table EMPLOYEE altered.
+
+SQL> 
+SQL> COMMENT ON COLUMN employee.emp_no IS
+  2      'The employee number';
+
+Comment created.
+
+SQL> 
+SQL> COMMENT ON COLUMN employee.emp_fname IS
+  2      'Employee first name';
+
+Comment created.
+
+SQL> 
+SQL> COMMENT ON COLUMN employee.emp_lname IS
+  2      'employee last name';
+
+Comment created.
+
+SQL> 
+SQL> COMMENT ON COLUMN employee.emp_tfn IS
+  2      'employee tax file number';
+
+Comment created.
+
+SQL> 
+SQL> COMMENT ON COLUMN employee.emp_salary IS
+  2      'employee salary';
+
+Comment created.
+
+SQL> 
+SQL> COMMENT ON COLUMN employee.emp_role IS
+  2      'Employee role ';
+
+Comment created.
+
+SQL> 
+SQL> COMMENT ON COLUMN employee.emp_no_managed IS
+  2      'The employee number';
+
+Comment created.
+
+SQL> 
+SQL> ALTER TABLE employee ADD CONSTRAINT employee_pk PRIMARY KEY ( emp_no );
+
+Table EMPLOYEE altered.
+
+SQL> 
+SQL> CREATE TABLE job (
+  2      job_no                         NUMBER(4) NOT NULL,
+  3      job_pickup_date_time           DATE NOT NULL,
+  4      job_intended_dropoff_date_time DATE NOT NULL,
+  5      job_actual_dropoff_date_time   DATE NOT NULL,
+  6      job_cost                       NUMBER(10, 2),
+  7      job_cli_pay_date               DATE NOT NULL,
+  8      quote_no                       NUMBER(4) NOT NULL,
+  9      emp_no_mech                    NUMBER(7) NOT NULL,
+ 10      emp_no_driver                  NUMBER(7) NOT NULL,
+ 11      truck_trailer_purpose_no       NUMBER(7) NOT NULL
+ 12  );
+
+Table JOB created.
+
+SQL> 
+SQL> COMMENT ON COLUMN job.job_no IS
+  2      'Unique Job number to identify each job. ';
+
+Comment created.
+
+SQL> 
+SQL> COMMENT ON COLUMN job.job_pickup_date_time IS
+  2      'Job pickup date and time of truck and trailer ';
+
+Comment created.
+
+SQL> 
+SQL> COMMENT ON COLUMN job.job_intended_dropoff_date_time IS
+  2      'Job intended dropoff  date and time of truck and trailer ';
+
+Comment created.
+
+SQL> 
+SQL> COMMENT ON COLUMN job.job_actual_dropoff_date_time IS
+  2      'Job actual dropoff  date and time of truck and trailer ';
+
+Comment created.
+
+SQL> 
+SQL> COMMENT ON COLUMN job.job_cost IS
+  2      'Cost of the job if different to the provided quote (optional)';
+
+Comment created.
+
+SQL> 
+SQL> COMMENT ON COLUMN job.job_cli_pay_date IS
+  2      'Date the client  has paid for the job (have placed as non-mandatory as client can choose to pay after completion of job)';
+
+Comment created.
+
+SQL> 
+SQL> COMMENT ON COLUMN job.quote_no IS
+  2      'Unique number that identifies each quote in the database (4 numeric long)';
+
+Comment created.
+
+SQL> 
+SQL> COMMENT ON COLUMN job.emp_no_mech IS
+  2      'The employee number';
+
+Comment created.
+
+SQL> 
+SQL> COMMENT ON COLUMN job.emp_no_driver IS
+  2      'The employee number';
+
+Comment created.
+
+SQL> 
+SQL> COMMENT ON COLUMN job.truck_trailer_purpose_no IS
+  2      'surrogate key for truck_trailer_purchase unique identifying number
+  3  (surrogate pk)';
+
+Comment created.
+
+SQL> 
+SQL> CREATE UNIQUE INDEX job__idx ON
+  2      job (
+  3          quote_no
+  4      ASC );
+
+INDEX JOB__IDX created.
+
+SQL> 
+SQL> CREATE UNIQUE INDEX job__idxv1 ON
+  2      job (
+  3          truck_trailer_purpose_no
+  4      ASC );
+
+INDEX JOB__IDXV1 created.
+
+SQL> 
+SQL> ALTER TABLE job ADD CONSTRAINT job_pk PRIMARY KEY ( job_no );
+
+Table JOB altered.
+
+SQL> 
+SQL> CREATE TABLE purpose (
+  2      purpose_no   CHAR(3 CHAR) NOT NULL,
+  3      purpose_desc VARCHAR2(100) NOT NULL
+  4  );
+
+Table PURPOSE created.
+
+SQL> 
+SQL> COMMENT ON COLUMN purpose.purpose_no IS
+  2      'a 3 character long code representing purpose number';
+
+Comment created.
+
+SQL> 
+SQL> COMMENT ON COLUMN purpose.purpose_desc IS
+  2      'a short description regarding the purpose for hiring the truck and trailer';
+
+Comment created.
+
+SQL> 
+SQL> ALTER TABLE purpose ADD CONSTRAINT purpose_pk PRIMARY KEY ( purpose_no );
+
+Table PURPOSE altered.
+
+SQL> 
+SQL> CREATE TABLE quote (
+  2      quote_no              NUMBER(4) NOT NULL,
+  3      quote_pref_start_date DATE NOT NULL,
+  4      quote_purpose_desc    VARCHAR2(150) NOT NULL,
+  5      quote_no_day_req      NUMBER(3) NOT NULL,
+  6      quote_prep_date       DATE NOT NULL,
+  7      quote_cost            NUMBER(10, 2) NOT NULL,
+  8      cli_no                NUMBER(7) NOT NULL,
+  9      purpose_no            CHAR(3 CHAR) NOT NULL
+ 10  );
+
+Table QUOTE created.
+
+SQL> 
+SQL> COMMENT ON COLUMN quote.quote_no IS
+  2      'Unique number that identifies each quote in the database (4 numeric long)';
+
+Comment created.
+
+SQL> 
+SQL> COMMENT ON COLUMN quote.quote_pref_start_date IS
+  2      'The preferred starting date that the client has requested for the job and noted by the clerk in the quote database.';
+
+Comment created.
+
+SQL> 
+SQL> COMMENT ON COLUMN quote.quote_purpose_desc IS
+  2      'Short description given by client of the purpose for hiring the truck/trailer';
+
+Comment created.
+
+SQL> 
+SQL> COMMENT ON COLUMN quote.quote_no_day_req IS
+  2      'client amount of days requested for quote ';
+
+Comment created.
+
+SQL> 
+SQL> COMMENT ON COLUMN quote.quote_prep_date IS
+  2      'The date the quote was prepared by the clerk';
+
+Comment created.
+
+SQL> 
+SQL> COMMENT ON COLUMN quote.quote_cost IS
+  2      'The quoted cost for the job ';
+
+Comment created.
+
+SQL> 
+SQL> COMMENT ON COLUMN quote.cli_no IS
+  2      'The unique client number that identifies each client in the database';
+
+Comment created.
+
+SQL> 
+SQL> COMMENT ON COLUMN quote.purpose_no IS
+  2      'a 3 character long code representing purpose number';
+
+Comment created.
+
+SQL> 
+SQL> CREATE UNIQUE INDEX quote__idx ON
+  2      quote (
+  3          purpose_no
+  4      ASC );
+
+INDEX QUOTE__IDX created.
+
+SQL> 
+SQL> ALTER TABLE quote ADD CONSTRAINT quote_pk PRIMARY KEY ( quote_no );
+
+Table QUOTE altered.
+
+SQL> 
+SQL> CREATE TABLE trailer (
+  2      trailer_code          CHAR(5) NOT NULL,
+  3      trailer_purchase_cost NUMBER(9) NOT NULL,
+  4      trailer_purchase_date DATE NOT NULL,
+  5      trailer_model         VARCHAR2(100) NOT NULL
+  6  );
+
+Table TRAILER created.
+
+SQL> 
+SQL> COMMENT ON COLUMN trailer.trailer_code IS
+  2      'a 5 character long code identifying a trailer';
+
+Comment created.
+
+SQL> 
+SQL> COMMENT ON COLUMN trailer.trailer_purchase_cost IS
+  2      'Cost of purchase of trailer';
+
+Comment created.
+
+SQL> 
+SQL> COMMENT ON COLUMN trailer.trailer_purchase_date IS
+  2      'Date of purchase of trailer';
+
+Comment created.
+
+SQL> 
+SQL> COMMENT ON COLUMN trailer.trailer_model IS
+  2      'The model of the trailer ';
+
+Comment created.
+
+SQL> 
+SQL> ALTER TABLE trailer ADD CONSTRAINT tr_pk PRIMARY KEY ( trailer_code );
+
+Table TRAILER altered.
+
+SQL> 
+SQL> CREATE TABLE trailer_class (
+  2      trailer_code            CHAR(5 CHAR) NOT NULL,
+  3      trailer_daily_hire_rate NUMBER(9, 2) NOT NULL
+  4  );
+
+Table TRAILER_CLASS created.
+
+SQL> 
+SQL> COMMENT ON COLUMN trailer_class.trailer_code IS
+  2      'a 5 character long code identifying a trailer';
+
+Comment created.
+
+SQL> 
+SQL> COMMENT ON COLUMN trailer_class.trailer_daily_hire_rate IS
+  2      'the daily hire rate for trailer';
+
+Comment created.
+
+SQL> 
+SQL> ALTER TABLE trailer_class ADD CONSTRAINT trailer_class_pk PRIMARY KEY ( trailer_code );
+
+Table TRAILER_CLASS altered.
+
+SQL> 
+SQL> CREATE TABLE trailer_type (
+  2      trailer_model         VARCHAR2(100) NOT NULL,
+  3      trailer_class_name    CHAR(2 CHAR) NOT NULL,
+  4      trailer_manufacturer  VARCHAR2(100) NOT NULL,
+  5      trailer_dimensions    VARCHAR2(20 CHAR) NOT NULL,
+  6      trailer_load_capacity NUMBER(10, 2) NOT NULL,
+  7      trailer_code          CHAR(5 CHAR) NOT NULL
+  8  );
+
+Table TRAILER_TYPE created.
+
+SQL> 
+SQL> COMMENT ON COLUMN trailer_type.trailer_model IS
+  2      'The model of the trailer ';
+
+Comment created.
+
+SQL> 
+SQL> COMMENT ON COLUMN trailer_type.trailer_class_name IS
+  2      'the class of the trailer';
+
+Comment created.
+
+SQL> 
+SQL> COMMENT ON COLUMN trailer_type.trailer_manufacturer IS
+  2      'The manufacturer of the trailer';
+
+Comment created.
+
+SQL> 
+SQL> COMMENT ON COLUMN trailer_type.trailer_dimensions IS
+  2      'the size in area of the trailer';
+
+Comment created.
+
+SQL> 
+SQL> COMMENT ON COLUMN trailer_type.trailer_load_capacity IS
+  2      'The weight in which a trailer can transport';
+
+Comment created.
+
+SQL> 
+SQL> COMMENT ON COLUMN trailer_type.trailer_code IS
+  2      'a 5 character long code identifying a trailer';
+
+Comment created.
+
+SQL> 
+SQL> ALTER TABLE trailer_type ADD CONSTRAINT trailer_typev1_pk PRIMARY KEY ( trailer_model );
+
+Table TRAILER_TYPE altered.
+
+SQL> 
+SQL> CREATE TABLE truck (
+  2      truck_vin               CHAR(16) NOT NULL,
+  3      truck_rego_no           CHAR(9 CHAR) NOT NULL,
+  4      truck_km_travelled      NUMBER(6) NOT NULL,
+  5      truck_last_service_date DATE NOT NULL,
+  6      truck_type_no           NUMBER(7) NOT NULL
+  7  );
+
+Table TRUCK created.
+
+SQL> 
+SQL> COMMENT ON COLUMN truck.truck_vin IS
+  2      'vehicle identification number ';
+
+Comment created.
+
+SQL> 
+SQL> COMMENT ON COLUMN truck.truck_rego_no IS
+  2      '9 character long registration number for a truck';
+
+Comment created.
+
+SQL> 
+SQL> COMMENT ON COLUMN truck.truck_km_travelled IS
+  2      'Odometer reading of specific truck (determines km travelled)';
+
+Comment created.
+
+SQL> 
+SQL> COMMENT ON COLUMN truck.truck_type_no IS
+  2      'The unique number to identify the truck type 
+  3  ';
+
+Comment created.
+
+SQL> 
+SQL> ALTER TABLE truck ADD CONSTRAINT truck_pk PRIMARY KEY ( truck_vin );
+
+Table TRUCK altered.
+
+SQL> 
+SQL> CREATE TABLE truck_class (
+  2      truck_class_no         NUMBER(7) NOT NULL,
+  3      truck_driver_hire_rate NUMBER(9, 2) NOT NULL,
+  4      truck_daily_hire_rate  NUMBER(9, 2) NOT NULL
+  5  );
+
+Table TRUCK_CLASS created.
+
+SQL> 
+SQL> COMMENT ON COLUMN truck_class.truck_class_no IS
+  2      'The unique number to identify truck class';
+
+Comment created.
+
+SQL> 
+SQL> COMMENT ON COLUMN truck_class.truck_driver_hire_rate IS
+  2      'The hire rate for the truck driver';
+
+Comment created.
+
+SQL> 
+SQL> COMMENT ON COLUMN truck_class.truck_daily_hire_rate IS
+  2      'The daily hire rate of the truck';
+
+Comment created.
+
+SQL> 
+SQL> ALTER TABLE truck_class ADD CONSTRAINT truck_class_pk PRIMARY KEY ( truck_class_no );
+
+Table TRUCK_CLASS altered.
+
+SQL> 
+SQL> CREATE TABLE truck_trailer_purpose (
+  2      truck_trailer_purpose_no NUMBER(7) NOT NULL,
+  3      purpose_no               CHAR(3 CHAR) NOT NULL,
+  4      truck_trailer_combo_code CHAR(3 CHAR) NOT NULL
+  5  );
+
+Table TRUCK_TRAILER_PURPOSE created.
+
+SQL> 
+SQL> COMMENT ON COLUMN truck_trailer_purpose.truck_trailer_purpose_no IS
+  2      'surrogate key for truck_trailer_purchase unique identifying number
+  3  (surrogate pk)';
+
+Comment created.
+
+SQL> 
+SQL> COMMENT ON COLUMN truck_trailer_purpose.purpose_no IS
+  2      'a 3 character long code representing purpose number';
+
+Comment created.
+
+SQL> 
+SQL> COMMENT ON COLUMN truck_trailer_purpose.truck_trailer_combo_code IS
+  2      'a 3 character code representing the combination of a truck and trailer';
+
+Comment created.
+
+SQL> 
+SQL> ALTER TABLE truck_trailer_purpose ADD CONSTRAINT combination_pk PRIMARY KEY ( truck_trailer_purpose_no );
+
+Table TRUCK_TRAILER_PURPOSE altered.
+
+SQL> 
+SQL> ALTER TABLE truck_trailer_purpose ADD CONSTRAINT truck_trailer_purpose_no_nk UNIQUE ( purpose_no,
+  2                                                                                        truck_trailer_combo_code );
+
+Table TRUCK_TRAILER_PURPOSE altered.
+
+SQL> 
+SQL> CREATE TABLE truck_type (
+  2      truck_type_no  NUMBER(7) NOT NULL,
+  3      truck_make     VARCHAR2(100) NOT NULL,
+  4      truck_model    VARCHAR2(100) NOT NULL,
+  5      truck_class_no NUMBER(7) NOT NULL
+  6  );
+
+Table TRUCK_TYPE created.
+
+SQL> 
+SQL> COMMENT ON COLUMN truck_type.truck_type_no IS
+  2      'The unique number to identify the truck type 
+  3  ';
+
+Comment created.
+
+SQL> 
+SQL> COMMENT ON COLUMN truck_type.truck_make IS
+  2      'The make/manufacturer of the truck ';
+
+Comment created.
+
+SQL> 
+SQL> COMMENT ON COLUMN truck_type.truck_model IS
+  2      'The model of the truck ';
+
+Comment created.
+
+SQL> 
+SQL> COMMENT ON COLUMN truck_type.truck_class_no IS
+  2      'The unique number to identify truck class';
+
+Comment created.
+
+SQL> 
+SQL> ALTER TABLE truck_type ADD CONSTRAINT truck_type_pk PRIMARY KEY ( truck_type_no );
+
+Table TRUCK_TYPE altered.
+
+SQL> 
+SQL> ALTER TABLE quote
+  2      ADD CONSTRAINT client_quote FOREIGN KEY ( cli_no )
+  3          REFERENCES client ( cli_no );
+
+Table QUOTE altered.
+
+SQL> 
+SQL> ALTER TABLE employee
+  2      ADD CONSTRAINT employee_employee FOREIGN KEY ( emp_no_managed )
+  3          REFERENCES employee ( emp_no );
+
+Table EMPLOYEE altered.
+
+SQL> 
+SQL> ALTER TABLE job
+  2      ADD CONSTRAINT employeeclerk_job FOREIGN KEY ( emp_no_driver )
+  3          REFERENCES employee ( emp_no );
+
+Table JOB altered.
+
+SQL> 
+SQL> ALTER TABLE job
+  2      ADD CONSTRAINT employeemech_job FOREIGN KEY ( emp_no_mech )
+  3          REFERENCES employee ( emp_no );
+
+Table JOB altered.
+
+SQL> 
+SQL> ALTER TABLE quote
+  2      ADD CONSTRAINT purpose_quote FOREIGN KEY ( purpose_no )
+  3          REFERENCES purpose ( purpose_no );
+
+Table QUOTE altered.
+
+SQL> 
+SQL> ALTER TABLE job
+  2      ADD CONSTRAINT quote_job FOREIGN KEY ( quote_no )
+  3          REFERENCES quote ( quote_no );
+
+Table JOB altered.
+
+SQL> 
+SQL> ALTER TABLE combo_detail
+  2      ADD CONSTRAINT trailer_combodetail FOREIGN KEY ( trailer_code )
+  3          REFERENCES trailer ( trailer_code );
+
+Table COMBO_DETAIL altered.
+
+SQL> 
+SQL> ALTER TABLE trailer_type
+  2      ADD CONSTRAINT trailerclass_trailer_type FOREIGN KEY ( trailer_code )
+  3          REFERENCES trailer_class ( trailer_code );
+
+Table TRAILER_TYPE altered.
+
+SQL> 
+SQL> ALTER TABLE trailer
+  2      ADD CONSTRAINT trailertype_trailer FOREIGN KEY ( trailer_model )
+  3          REFERENCES trailer_type ( trailer_model );
+
+Table TRAILER altered.
+
+SQL> 
+SQL> ALTER TABLE combo_detail
+  2      ADD CONSTRAINT truck_combodetail FOREIGN KEY ( truck_vin )
+  3          REFERENCES truck ( truck_vin );
+
+Table COMBO_DETAIL altered.
+
+SQL> 
+SQL> ALTER TABLE truck_trailer_purpose
+  2      ADD CONSTRAINT truck_trailer_combo FOREIGN KEY ( truck_trailer_combo_code )
+  3          REFERENCES combo_detail ( truck_trailer_combo_code );
+
+Table TRUCK_TRAILER_PURPOSE altered.
+
+SQL> 
+SQL> ALTER TABLE truck_type
+  2      ADD CONSTRAINT truckclass_trucktype FOREIGN KEY ( truck_class_no )
+  3          REFERENCES truck_class ( truck_class_no );
+
+Table TRUCK_TYPE altered.
+
+SQL> 
+SQL> ALTER TABLE job
+  2      ADD CONSTRAINT trucktrailerpurpose_job FOREIGN KEY ( truck_trailer_purpose_no )
+  3          REFERENCES truck_trailer_purpose ( truck_trailer_purpose_no );
+
+Table JOB altered.
+
+SQL> 
+SQL> ALTER TABLE truck
+  2      ADD CONSTRAINT trucktype_truck FOREIGN KEY ( truck_type_no )
+  3          REFERENCES truck_type ( truck_type_no );
+
+Table TRUCK altered.
+
+SQL> 
+SQL> ALTER TABLE truck_trailer_purpose
+  2      ADD CONSTRAINT ttpd_tt FOREIGN KEY ( purpose_no )
+  3          REFERENCES purpose ( purpose_no );
+
+Table TRUCK_TRAILER_PURPOSE altered.
+
+SQL> 
+SQL> SPOOL OFF
