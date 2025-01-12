@@ -1,6 +1,6 @@
 # Monash Haulers Database Design Case Study 
 ## Overview
-This project demonstrates the development of designing and implementing a relational database for Monash Haulers, a trucking business that provides trucks and trailers for transportation services. The project was part of the FIT2094 Databases unit at Monash University, showcasing database design skills crucial for a data analyst role. It demonstrates the application of database design principles, normalization, and implementation skills using Oracle RDBMS. 
+This project demonstrates the development of designing and implementing a relational database for Monash Haulers, a trucking business that provides trucks and trailers for transportation services. It demonstrates the application of database design principles, normalization, and implementation skills using Oracle RDBMS. 
 
 The objective was to transform a case study into a full database model, focusing on applying relational database theories, creating an optimised design, and adhering to industry standards.
 ## Key Deliverables
